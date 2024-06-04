@@ -32,11 +32,10 @@ def wait_for_module(process: int, module_name: str) -> tuple:
             if not psapi.EnumProcessModulesEx(process, ctypes.byref(modulelist),
                     modulelist_size, ctypes.byref(cb_needed), LIST_MODULES_ALL):
                 status = wintypes.DWORD()
-                kernel32.GetExitCodeProcess(process, ctypes.byref(status))
-                if status.value != 259: # STILL_ACTIVE: 259
-                    raise QueryError("process is no longer active, exit code %s" % status.value)
-                else:
-                    continue
+                if kernel32.GetExitCodeProcess(process, ctypes.byref(status)):
+                    if status.value != 259: # STILL_ACTIVE: 259
+                        raise QueryError("process is no longer active, exit code %s" % status.value)
+                continue
             if cb_needed.value < modulelist_size:
                 break
             else:
