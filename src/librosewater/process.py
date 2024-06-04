@@ -3,14 +3,15 @@ import ctypes
 from ctypes import wintypes
 from . import *
 
-def wait_for_process(process_name: str) -> int:
+def wait_for_process(process_name: str) -> tuple:
     """
     Blocking function to wait for a process.
 
     Arguments:
     process_name: str: Name of the process to wait for.
 
-    Returns int class (process handle)
+    Returns tuple class
+    (process_pid, process_handle)
     """
     while True:
         count = 32
@@ -32,6 +33,6 @@ def wait_for_process(process_name: str) -> int:
                 proc_name = (ctypes.c_char * MAX_PATH)()
                 if psapi.GetProcessImageFileNameA(proc, proc_name, MAX_PATH):
                     if process_name == os.path.basename(proc_name.value.decode()):
-                        return proc
+                        return (loaded_processes[x], proc)
                 kernel32.CloseHandle(proc)
 
