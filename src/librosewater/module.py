@@ -34,7 +34,7 @@ def wait_for_module(process: int, module_name: str) -> tuple:
                 status = wintypes.DWORD()
                 if kernel32.GetExitCodeProcess(process, ctypes.byref(status)):
                     if status.value != 259: # STILL_ACTIVE: 259
-                        raise QueryError("process is no longer active, exit code %s" % status.value)
+                        raise ProcessClosedError("process is no longer active, exit code %s" % status.value)
                 continue
             if cb_needed.value < modulelist_size:
                 break
