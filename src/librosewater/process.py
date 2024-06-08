@@ -35,4 +35,3 @@ def wait_for_process(process_name: str) -> tuple:
                     if process_name == os.path.basename(proc_name.value.decode()):
                         return (loaded_processes[x], proc)
                 kernel32.CloseHandle(proc)
-

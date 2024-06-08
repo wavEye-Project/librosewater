@@ -41,15 +41,13 @@ def wait_for_module(process: int, module_name: str) -> tuple:
             else:
                 count *= 2
 
-        for md in modulelist:
-            if not md:
-                continue
+        for module in filter(None, modulelist):
             name = ctypes.create_unicode_buffer(MAX_PATH)
             if not psapi.GetModuleFileNameExW(process,
-                    ctypes.c_int64(md), name, MAX_PATH):
+                    ctypes.c_int64(module), name, MAX_PATH):
                 continue
             if os.path.basename(name.value) == module_name:
-                return (md, name.value)
+                return (module, name.value)
 
 def dump_module(process: int, module: int) -> tuple:
     """
@@ -96,3 +94,10 @@ def inject_module(process: int, module: int, data: bytes) -> None:
             ctypes.c_int64(module), data, len(data), 0):
         error = kernel32.GetLastError()
         raise ReadWriteError("write error, WriteProcessMemory return %s" % error)
+    
+    # Write old security back on. If it fails, it's
+    # not the end of the world but it's good to set
+    # the old security back just in case some other
+    # piece of code does stuff with it.
+    kernel32.VirtualProtectEx(process, ctypes.c_int64(module),
+        len(data), old_security.value, ctypes.byref(ctypes.c_int64()))
