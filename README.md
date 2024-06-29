@@ -31,7 +31,7 @@ import librosewater
 import librosewater.module
 import librosewater.process
 
-PID = librosewater.wait_for_process("my_app.exe")
+PID = librosewater.process.wait_for_process("my_app.exe")
 process_handle = ctypes.windll.kernel32.OpenProcess(librosewater.PROCESS_ALL_ACCESS, False, PID)
 
 # Get module address and path
