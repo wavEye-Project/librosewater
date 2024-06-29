@@ -6,7 +6,7 @@
 
 
 ## :computer: Support
-The library only works on Windows for now, but cross-platform support is planned. ~~Don't look forward to it, though.~~
+The library only works on Windows for now, but cross-platform support may happen in the future. ~~Don't look forward to it, though.~~
 
 For all support needed to this library, you can open an issue!
 
